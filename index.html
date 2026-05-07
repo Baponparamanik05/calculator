@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scientific Calculator</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, sans-serif;
+}
+
+body{
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    overflow:hidden;
+}
+
+.calculator{
+    width:400px;
+    padding:20px;
+    border-radius:25px;
+    backdrop-filter:blur(20px);
+    background:rgba(255,255,255,0.08);
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+    animation:float 4s ease-in-out infinite;
+}
+
+@keyframes float{
+    0%,100%{
+        transform:translateY(0);
+    }
+    50%{
+        transform:translateY(-12px);
+    }
+}
+
+.display{
+    width:100%;
+    height:80px;
+    border:none;
+    outline:none;
+    border-radius:15px;
+    padding:15px;
+    margin-bottom:20px;
+    font-size:2rem;
+    text-align:right;
+    color:white;
+    background:rgba(255,255,255,0.15);
+    box-shadow:inset 0 0 10px rgba(0,0,0,0.3);
+}
+
+.buttons{
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:12px;
+}
+
+button{
+    height:20px;
+    border:none;
+    border-radius:15px;
+    cursor:pointer;
+    font-size:1rem;
+    color:white;
+    background:rgba(255,255,255,0.12);
+    transition:0.2s;
+    box-shadow:0 4px 10px rgba(0,0,0,0.3);
+}
+
+button:hover{
+    transform:scale(1.08);
+    background:rgba(255,255,255,0.25);
+}
+
+button:active{
+    transform:scale(0.92);
+}
+
+.operator{
+    background:#ff9800;
+}
+
+.equal{
+    background:#00c853;
+    grid-column:span 2;
+}
+
+.clear{
+    background:#ff1744;
+}
+
+@media(max-width:450px){
+    .calculator{
+        width:95%;
+    }
+
+    button{
+        height:55px;
+        font-size:0.9rem;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="calculator">
+
+<input type="text" class="display" id="display" readonly>
+
+<div class="buttons">
+
+<button class="clear" onclick="clearDisplay()">C</button>
+<button onclick="del()">⌫</button>
+<button onclick="append('(')">(</button>
+<button onclick="append(')')">)</button>
+<button class="operator" onclick="append('/')">÷</button>
+
+<button onclick="append('7')">7</button>
+<button onclick="append('8')">8</button>
+<button onclick="append('9')">9</button>
+<button class="operator" onclick="append('*')">×</button>
+<button onclick="sqrt()">√</button>
+
+<button onclick="append('4')">4</button>
+<button onclick="append('5')">5</button>
+<button onclick="append('6')">6</button>
+<button class="operator" onclick="append('-')">−</button>
+<button onclick="power()">x²</button>
+
+<button onclick="append('1')">1</button>
+<button onclick="append('2')">2</button>
+<button onclick="append('3')">3</button>
+<button class="operator" onclick="append('+')">+</button>
+<button onclick="append('%')">%</button>
+
+<button onclick="sin()">sin</button>
+<button onclick="cos()">cos</button>
+<button onclick="tan()">tan</button>
+<button onclick="log()">log</button>
+<button onclick="ln()">ln</button>
+
+<button onclick="append('0')">0</button>
+<button onclick="append('.')">.</button>
+<button onclick="pi()">π</button>
+<button onclick="e()">e</button>
+<button class="equal" onclick="calculate()">=</button>
+
+</div>
+</div>
+
+<script>
+
+const display = document.getElementById("display");
+
+function append(value){
+    display.value += value;
+}
+
+function clearDisplay(){
+    display.value = "";
+}
+
+function del(){
+    display.value = display.value.slice(0,-1);
+}
+
+function sqrt(){
+    try{
+        display.value = Math.sqrt(eval(display.value));
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function power(){
+    try{
+        display.value = Math.pow(eval(display.value),2);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function sin(){
+    try{
+        display.value = Math.sin(eval(display.value) * Math.PI/180).toFixed(6);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function cos(){
+    try{
+        display.value = Math.cos(eval(display.value) * Math.PI/180).toFixed(6);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function tan(){
+    try{
+        display.value = Math.tan(eval(display.value) * Math.PI/180).toFixed(6);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function log(){
+    try{
+        display.value = Math.log10(eval(display.value)).toFixed(6);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function ln(){
+    try{
+        display.value = Math.log(eval(display.value)).toFixed(6);
+    }catch{
+        display.value = "Error";
+    }
+}
+
+function pi(){
+    display.value += Math.PI.toFixed(8);
+}
+
+function e(){
+    display.value += Math.E.toFixed(8);
+}
+
+function calculate(){
+    try{
+        let result = eval(display.value);
+
+        if(isNaN(result) || result === Infinity){
+            display.value = "Invalid";
+        }else{
+            display.value = result;
+        }
+
+    }catch{
+        display.value = "Error";
+    }
+}
+
+document.addEventListener("keydown",(e)=>{
+
+    const allowed = "0123456789+-*/.%()";
+
+    if(allowed.includes(e.key)){
+        append(e.key);
+    }
+
+    else if(e.key === "Enter"){
+        calculate();
+    }
+
+    else if(e.key === "Backspace"){
+        del();
+    }
+
+    else if(e.key === "Escape"){
+        clearDisplay();
+    }
+
+});
+</script>
+
+</body>
+</html>
